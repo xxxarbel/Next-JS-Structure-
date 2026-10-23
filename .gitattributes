@@ -1,0 +1,7 @@
+# LF in the repo and the working tree on every OS, so files edited on Windows
+# still run in the Linux containers ATS Hosting builds and starts.
+* text=auto eol=lf
+*.ico binary
+*.png binary
+*.jpg binary
+*.webp binary

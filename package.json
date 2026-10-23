@@ -1,0 +1,45 @@
+{
+  "name": "next-js-structure",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.5.1",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "next typegen && tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "pnpm lint && pnpm typecheck",
+    "env:init": "node scripts/init-env.mjs",
+    "db:up": "node scripts/init-env.mjs --quiet && docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && pnpm db:up && pnpm db:migrate",
+    "db:logs": "docker compose logs -f db",
+    "db:psql": "docker compose exec db psql",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "drizzle-orm": "^0.45.4",
+    "next": "16.4.2",
+    "postgres": "^3.4.9",
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4.3.3",
+    "@types/node": "^24",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.2",
+    "prettier": "^3.9.10",
+    "prettier-plugin-tailwindcss": "^0.8.1",
+    "tailwindcss": "^4.3.3",
+    "typescript": "^5"
+  }
+}

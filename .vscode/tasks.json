@@ -1,0 +1,23 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Database",
+      "detail": "Starts the local Postgres and waits until it's ready",
+      "type": "shell",
+      "command": "pnpm db:up",
+      "problemMatcher": []
+    },
+    {
+      "label": "Dev server",
+      "detail": "The database, then next dev on http://localhost:3000",
+      "type": "shell",
+      "command": "pnpm dev",
+      "dependsOn": "Database",
+      "isBackground": true,
+      "group": { "kind": "build", "isDefault": true },
+      "presentation": { "reveal": "always", "panel": "dedicated" },
+      "problemMatcher": []
+    }
+  ]
+}

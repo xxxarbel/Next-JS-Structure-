@@ -1,0 +1,34 @@
+# Local Postgres for development: `pnpm db:up` starts it and waits until it's ready.
+# Settings come from .env (see .env.example), and the data lives in the `pgdata`
+# volume until `pnpm db:reset`. Production never uses this file: ATS Hosting
+# attaches its own database and injects DATABASE_URL.
+services:
+  db:
+    # Postgres 18 with pgvector, the image ATS Hosting runs for project databases,
+    # so a dump of this database restores there cleanly.
+    image: pgvector/pgvector:pg18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-app}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-app}
+      POSTGRES_DB: ${POSTGRES_DB:-app}
+      # Defaults for psql and pg_isready inside the container (`pnpm db:psql`).
+      PGUSER: ${POSTGRES_USER:-app}
+      PGDATABASE: ${POSTGRES_DB:-app}
+    ports:
+      # Loopback only: without the 127.0.0.1 prefix Docker publishes the port on
+      # every interface and the database is reachable from the LAN.
+      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      # Postgres 18 keeps its data in /var/lib/postgresql/18/docker.
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      # Over TCP, so it only passes once the real server is up: the temporary one
+      # that runs the first-time setup listens on the Unix socket only.
+      test: ["CMD", "pg_isready", "-h", "127.0.0.1"]
+      interval: 2s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  pgdata:
